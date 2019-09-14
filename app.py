@@ -5,6 +5,7 @@ from keras.preprocessing.image import img_to_array, load_img
 import numpy as np
 import time
 import pygame.mixer
+from PIL import Image
 
 CASCADE_FILE_PATH = "haarcascade_frontalface_alt2.xml"
 
@@ -30,18 +31,31 @@ if __name__ == '__main__':
     cascade = cv2.CascadeClassifier(CASCADE_FILE_PATH)
 
     ##貼り付け画像
-    anime_file = "smile.png"
-    anime_face = cv2.imread(anime_file)
+    smile = cv2.imread('smile.png', cv2.IMREAD_UNCHANGED)
 
-    ##画像を貼り付ける関数
-    def anime_face_func(img, rect):
-        (x1, y1, x2, y2) = rect
-        w = x2 - x1
-        h = y2 - y1
-        img_face = cv2.resize(anime_face, (w, h))
-        img2 = img.copy()
-        img2[y1:y2, x1:x2] = img_face
-        return img2
+    def overlay(background_image, overlay_image, point):
+        # OpenCV形式の画像をPIL形式に変換(α値含む)
+
+        # 背景画像
+        rgb_background_image = cv2.cvtColor(background_image, cv2.COLOR_BGR2RGB)
+        pil_rgb_background_image = Image.fromarray(rgb_background_image)
+        pil_rgba_background_image = pil_rgb_background_image.convert('RGBA')
+        # オーバーレイ画像
+        cv_rgb_overlay_image = cv2.cvtColor(overlay_image, cv2.COLOR_BGRA2RGBA)
+        pil_rgb_overlay_image = Image.fromarray(cv_rgb_overlay_image)
+        pil_rgba_overlay_image = pil_rgb_overlay_image.convert('RGBA')
+
+        # composite()は同サイズ画像同士が必須のため、合成用画像を用意
+        pil_rgba_bg_temp = Image.new('RGBA', pil_rgba_background_image.size,
+                                    (255, 255, 255, 0))
+        # 座標を指定し重ね合わせる
+        pil_rgba_bg_temp.paste(pil_rgba_overlay_image, point, pil_rgba_overlay_image)
+        result_image = Image.alpha_composite(pil_rgba_background_image, pil_rgba_bg_temp)
+
+        # OpenCV形式画像へ変換
+        cv_result_image = cv2.cvtColor(np.asarray(result_image), cv2.COLOR_RGBA2BGRA)
+
+        return cv_result_image
 
     # カメラ映像取得
     cap = cv2.VideoCapture(DEVICE_ID)
@@ -72,10 +86,13 @@ if __name__ == '__main__':
         # confidenceが一番高いものが"sad"か"fear"かつ、confidenceが0.3以上だったら表示する
         if len(pre) != 0 and (pre[0][0] == "sad" or pre[0][0] == "fear") and pre[0][1] > 0.3:
             for (x, y, w, h) in face_list:
-                color = (0, 0, 225)
+                # color = (0, 0, 225)
                 pen_w = 3
                 # cv2.rectangle(img, (x, y), (x+w, y+h), color, thickness = pen_w)
-                img = anime_face_func(img, (x, y, x+w, y+h))
+                size = (w, h)
+                point = (x, y)
+                resize_smile = cv2.resize(smile, size)
+                img = overlay(img, resize_smile, point)
                 cv2.putText(img, "Let's smile!", (x,y-30), cv2.FONT_HERSHEY_DUPLEX | cv2.FONT_ITALIC, 2.5, (100,100,200), 4, cv2.LINE_AA)
                 smile_flag = True
 
