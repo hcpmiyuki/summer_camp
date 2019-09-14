@@ -3,11 +3,21 @@ import os
 from for_model import for_model
 from keras.preprocessing.image import img_to_array, load_img
 import numpy as np
+import time
+import pygame.mixer
 
 CASCADE_FILE_PATH = os.environ['CV2_CASCADE_FILE_PATH']
 
 
+#効果音を鳴らすための処理
+pygame.mixer.init()
+pygame.mixer.music.load("blackout5.mp3")
+
+
 if __name__ == '__main__':
+    # 効果音出すためのフラグ
+    smile_flag = False
+
     # 定数定義
     ESC_KEY = 27     # Escキー
     INTERVAL= 33     # 待ち時間
@@ -64,20 +74,15 @@ if __name__ == '__main__':
         pre = for_model(pImg)
         print(pre)
 
-        if len(pre) == 2 and (pre[0][1] > 0.3 or pre[1][1]) > 0.3:
+        if len(pre) != 0 and pre[0][1] > 0.3:
             for (x, y, w, h) in face_list:
                 color = (0, 0, 225)
                 pen_w = 3
                 # cv2.rectangle(img, (x, y), (x+w, y+h), color, thickness = pen_w)
                 img = anime_face_func(img, (x, y, x+w, y+h))
                 cv2.putText(img, "Let's smile!", (x,y-30), cv2.FONT_HERSHEY_DUPLEX | cv2.FONT_ITALIC, 2.5, (100,100,200), 4, cv2.LINE_AA)
-        elif len(pre) == 1 and pre[0][1] > 0.3:
-            for (x, y, w, h) in face_list:
-                color = (0, 0, 225)
-                pen_w = 3
-                # cv2.rectangle(img, (x, y), (x+w, y+h), color, thickness = pen_w)
-                img = anime_face_func(img, (x, y, x+w, y+h))
-                cv2.putText(c_frame, "Let's smile!", (x,y-30), cv2.FONT_HERSHEY_DUPLEX | cv2.FONT_ITALIC, 2.5, (100,100,200), 4, cv2.LINE_AA)
+                smile_flag = True
+
         # else:
         #     for (x, y, w, h) in face_list:
         #         color = (255, 0, 0)
@@ -88,6 +93,14 @@ if __name__ == '__main__':
         # フレーム表示
         cv2.imshow(ORG_WINDOW_NAME, c_frame)
         cv2.imshow(GAUSSIAN_WINDOW_NAME, img)
+
+        if smile_flag:
+            #音を鳴らすコード
+            pygame.mixer.music.play()
+            time.sleep(1)
+            pygame.mixer.music.stop()
+            smile_flag = False
+
 
         # Escキーで終了
         key = cv2.waitKey(INTERVAL)
