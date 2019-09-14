@@ -21,9 +21,7 @@ if __name__ == '__main__':
     # 定数定義
     ESC_KEY = 27     # Escキー
     INTERVAL= 33     # 待ち時間
-    FRAME_RATE = 30  # fps
 
-    ORG_WINDOW_NAME = "org"
     GAUSSIAN_WINDOW_NAME = "gaussian"
 
     DEVICE_ID = 0
@@ -53,7 +51,6 @@ if __name__ == '__main__':
     height, width, channels = c_frame.shape
 
     # ウィンドウの準備
-    cv2.namedWindow(ORG_WINDOW_NAME)
     cv2.namedWindow(GAUSSIAN_WINDOW_NAME)
 
     # 変換処理ループ
@@ -61,10 +58,8 @@ if __name__ == '__main__':
 
         # 画像の取得と顔の検出
         img = c_frame
-        # img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         face_list = cascade.detectMultiScale(img, minSize=(100, 100))
 
-        # img_gray  = load_img(img, grayscale=True , target_size=(64, 64))
         img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         img_gray = cv2.resize(img_gray, (64, 64))
         img_array = img_to_array(img_gray)
@@ -91,7 +86,6 @@ if __name__ == '__main__':
 
 
         # フレーム表示
-        cv2.imshow(ORG_WINDOW_NAME, c_frame)
         cv2.imshow(GAUSSIAN_WINDOW_NAME, img)
 
         if smile_flag:
