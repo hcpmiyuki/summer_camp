@@ -18,9 +18,7 @@ def for_model(image_array):
         4:'sad',5:'surprise',6:'neutral'})
 
     model=load_model('fer2013_mini_XCEPTION.110-0.65.hdf5', compile=False)
-    logging.info('model predict start')
     pre = model.predict(image_array)[0]
-    logging.info(pre)
     top_indices = pre.argsort()[-5:][::-1]
     result = [(classes[i] , pre[i]) for i in top_indices]
 

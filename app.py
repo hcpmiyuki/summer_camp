@@ -20,8 +20,8 @@ if __name__ == '__main__':
     smile_flag = False
 
     # 定数定義
-    ESC_KEY = 27     # Escキー
-    INTERVAL= 33     # 待ち時間
+    # ESC_KEY = 27     # Escキー
+    # INTERVAL= 33     # 待ち時間
 
     GAUSSIAN_WINDOW_NAME = "gaussian"
 
@@ -115,8 +115,7 @@ if __name__ == '__main__':
 
 
         # Escキーで終了
-        key = cv2.waitKey(INTERVAL)
-        if key == ESC_KEY:
+        if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
         # 次のフレーム読み込み
