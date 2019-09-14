@@ -1,0 +1,29 @@
+import cv2
+from PIL import Image
+from keras.preprocessing.image import load_img, img_to_array
+from keras.models import load_model
+import numpy as np
+import argparse
+import glob
+import os
+import time
+import logging
+
+def for_model(image_array):
+    # X = []
+    # X.append(image_array)
+    # X = np.array(X)
+    # X = X.astype("float") / 256
+    classes = ({0:'angry',1:'disgust',2:'fear',3:'happy',
+        4:'sad',5:'surprise',6:'neutral'})
+
+    model=load_model('fer2013_mini_XCEPTION.110-0.65.hdf5', compile=False)
+    logging.info('model predict start')
+    pre = model.predict(image_array)[0]
+    logging.info(pre)
+    top_indices = pre.argsort()[-5:][::-1]
+    result = []
+    for i in top_indices:
+        if classes[i] == "sad" or classes[i] == "fear":
+            result.append((classes[i], pre[i]))
+    return result
