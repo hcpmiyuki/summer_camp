@@ -1,13 +1,9 @@
-import cv2
-from PIL import Image
 from keras.preprocessing.image import load_img, img_to_array
 from keras.models import load_model
-import numpy as np
 import argparse
-import glob
-import os
-import time
-import logging
+
+
+
 
 def for_model(image_array):
     # X = []
