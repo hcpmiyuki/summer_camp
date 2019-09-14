@@ -22,8 +22,6 @@ def for_model(image_array):
     pre = model.predict(image_array)[0]
     logging.info(pre)
     top_indices = pre.argsort()[-5:][::-1]
-    result = []
-    for i in top_indices:
-        if classes[i] == "sad" or classes[i] == "fear":
-            result.append((classes[i], pre[i]))
+    result = [(classes[i] , pre[i]) for i in top_indices]
+
     return result

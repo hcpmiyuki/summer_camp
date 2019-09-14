@@ -69,7 +69,8 @@ if __name__ == '__main__':
         pre = for_model(pImg)
         print(pre)
 
-        if len(pre) != 0 and pre[0][1] > 0.3:
+        # confidenceが一番高いものが"sad"か"fear"かつ、confidenceが0.3以上だったら表示する
+        if len(pre) != 0 and (pre[0][0] == "sad" or pre[0][0] == "fear") and pre[0][1] > 0.3:
             for (x, y, w, h) in face_list:
                 color = (0, 0, 225)
                 pen_w = 3
