@@ -6,7 +6,7 @@ import numpy as np
 import time
 import pygame.mixer
 
-CASCADE_FILE_PATH = os.environ['CV2_CASCADE_FILE_PATH']
+CASCADE_FILE_PATH = "haarcascade_frontalface_alt2.xml"
 
 
 #効果音を鳴らすための処理
