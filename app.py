@@ -4,15 +4,15 @@ from for_model import for_model
 from keras.preprocessing.image import img_to_array, load_img
 import numpy as np
 import time
-import pygame.mixer
+# import pygame.mixer
 from PIL import Image
 
 CASCADE_FILE_PATH = "haarcascade_frontalface_alt2.xml"
 
 
-#効果音を鳴らすための処理
-pygame.mixer.init()
-pygame.mixer.music.load("blackout5.mp3")
+# #効果音を鳴らすための処理
+# pygame.mixer.init()
+# pygame.mixer.music.load("blackout5.mp3")
 
 
 if __name__ == '__main__':
@@ -106,12 +106,12 @@ if __name__ == '__main__':
         # フレーム表示
         cv2.imshow(GAUSSIAN_WINDOW_NAME, img)
 
-        if smile_flag:
-            #音を鳴らすコード
-            pygame.mixer.music.play()
-            time.sleep(1)
-            pygame.mixer.music.stop()
-            smile_flag = False
+        # if smile_flag:
+        #     #音を鳴らすコード
+        #     pygame.mixer.music.play()
+        #     time.sleep(1)
+        #     pygame.mixer.music.stop()
+        #     smile_flag = False
 
 
         # Escキーで終了
