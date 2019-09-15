@@ -17,7 +17,7 @@ CASCADE_FILE_PATH = "haarcascade_frontalface_alt2.xml"
 
 if __name__ == '__main__':
     # 効果音出すためのフラグ
-    smile_flag = False
+    # smile_flag = False
 
     # 定数定義
     # ESC_KEY = 27     # Escキー
@@ -84,23 +84,27 @@ if __name__ == '__main__':
         print(pre)
 
         # confidenceが一番高いものが"sad"か"fear"かつ、confidenceが0.3以上だったら表示する
-        if len(pre) != 0 and (pre[0][0] == "sad" or pre[0][0] == "fear") and pre[0][1] > 0.3:
-            for (x, y, w, h) in face_list:
-                # color = (0, 0, 225)
-                pen_w = 3
-                # cv2.rectangle(img, (x, y), (x+w, y+h), color, thickness = pen_w)
-                size = (w, h)
-                point = (x, y)
-                resize_smile = cv2.resize(smile, size)
-                img = overlay(img, resize_smile, point)
-                cv2.putText(img, "Let's smile!", (x,y-30), cv2.FONT_HERSHEY_DUPLEX | cv2.FONT_ITALIC, 2.5, (100,100,200), 4, cv2.LINE_AA)
-                smile_flag = True
+        if len(pre) != 0:
+            if (pre[0][0] == "sad" or pre[0][0] == "fear") and pre[0][1] > 0.3:
+                for (x, y, w, h) in face_list:
+                    # color = (0, 0, 225)
+                    # pen_w = 3
+                    # cv2.rectangle(img, (x, y), (x+w, y+h), color, thickness = pen_w)
+                    size = (w, h)
+                    point = (x, y)
+                    resize_smile = cv2.resize(smile, size)
+                    img = overlay(img, resize_smile, point)
+                    cv2.putText(img, "Let's smile!", (x,y-30), cv2.FONT_HERSHEY_DUPLEX | cv2.FONT_ITALIC, 2.5, (100,100,200), 4, cv2.LINE_AA)
+                    # smile_flag = True
 
-        # else:
-        #     for (x, y, w, h) in face_list:
-        #         color = (255, 0, 0)
-        #         pen_w = 3
-        #         cv2.rectangle(img, (x, y), (x+w, y+h), color, thickness = pen_w)
+            elif pre[0][0] == "happy" and pre[0][1] > 0.3:
+                for (x, y, w, h) in face_list:
+                    # color = (255, 0, 0)
+                    # pen_w = 3
+                    # cv2.rectangle(img, (x, y), (x+w, y+h), color, thickness = pen_w)
+                    size = (w, h)
+                    point = (x, y)
+                    cv2.putText(img, "Good smile!", (x,y-30), cv2.FONT_HERSHEY_DUPLEX | cv2.FONT_ITALIC, 2.5, (46,204,250), 4, cv2.LINE_AA)
 
 
         # フレーム表示
